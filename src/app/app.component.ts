@@ -19,11 +19,22 @@ export class AppComponent implements OnInit {
     // .then(result => console.log(result))
     // .catch(err => console.error(err));
 
-    this.minhaObservable('Giorgio').subscribe(result => {
-      console.log(result)
-    },
-    err => console.error(err),
-    )
+    // this.minhaObservable('Giorgio').subscribe(result => {
+    //   console.log(result)
+    // },
+    // err => console.error(err),
+    // );
+
+    const observer = {
+      next: valor => console.log('Next: ' +valor),
+      error: err => console.error('Error: ' +err),
+      complete: () => console.warn('Complete !')
+    }
+
+    const obs = this.minhaObservable('Giorgio');
+
+    obs.subscribe(observer);
+
   }
 
   minhaPromise(nome: string ): Promise<string> {
@@ -46,6 +57,7 @@ export class AppComponent implements OnInit {
         setTimeout(() => {
           subscriber.next('Resposta com delay ' + nome);
         },1000);
+        subscriber.complete();
       }else{
           subscriber.error('Ops ! deu erro');
       }
