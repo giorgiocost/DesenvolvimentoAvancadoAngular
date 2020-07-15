@@ -26,14 +26,22 @@ export class AppComponent implements OnInit {
     // );
 
     const observer = {
-      next: valor => console.log('Next: ' +valor),
-      error: err => console.error('Error: ' +err),
+      next: valor => console.log('Next: ' , valor),
+      error: err => console.error('Error: ' + err),
       complete: () => console.warn('Complete !')
     }
 
-    const obs = this.minhaObservable('Giorgio');
+    // const obs = this.minhaObservable('Giorgio');
 
-    obs.subscribe(observer);
+    // obs.subscribe(observer);
+
+    const obsUsuario = this.usuarioObservable('giorgio', 'giorgio');
+    const subs = obsUsuario.subscribe(observer);
+
+    setTimeout(() => {
+      subs.unsubscribe();
+      console.log('conexão fechada: ',subs.closed);
+    }, 3500);
 
   }
 
@@ -63,6 +71,45 @@ export class AppComponent implements OnInit {
       }
       })
   }
+
+  usuarioObservable(nome: string, email: string): Observable<Usuario > {
+    return new Observable(subscriber => {
+      if(nome === 'giorgio'){
+        let usuario = new Usuario(nome, email);
+        
+        setTimeout(() => {
+          subscriber.next(usuario);
+        },1000);
+
+        setTimeout(() => {
+          subscriber.next(usuario);
+        },2000);
+
+        setTimeout(() => {
+          subscriber.next(usuario);
+        },3000);
+
+        setTimeout(() => {
+          subscriber.next(usuario);
+        },4000);
+
+        setTimeout(() => {
+          subscriber.complete();
+        },5000);
+        
+      }else{
+          subscriber.error('Ops ! deu erro');
+      }
+      })
+  }
   
 
+}
+
+export class Usuario {
+
+  constructor(private nome: string, private email: string){
+    this.nome = nome;
+    this.nome = email;
+  }
 }
